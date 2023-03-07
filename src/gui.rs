@@ -1,5 +1,6 @@
+use eframe::epaint::{Vec2, Rounding};
 use eframe::{App, egui, Frame, NativeOptions, run_native};
-use eframe::egui::{Color32, Context, FontFamily, FontId, RichText, TextFormat, Ui};
+use eframe::egui::{Color32, Context, FontFamily, FontId, RichText, TextFormat, Ui, Button};
 use eframe::egui::text::LayoutJob;
 use egui::CentralPanel;
 use Screens::{End, Game};
@@ -46,14 +47,14 @@ impl MainWindow {
     }
 
     fn show_grid(&mut self, ui: &mut Ui, interactive: bool) {
-        egui::Grid::new("Demo Grid").show(ui, |ui| {
+        egui::Grid::new("Demo Grid").spacing(Vec2::new(0.0, 0.0)).show(ui, |ui| {
             let original_board;
             {
                 original_board = self.game_state.board
             }
             for (row_index, row) in original_board.iter().enumerate() {
                 for (column_index, tile) in row.iter().enumerate() {
-                    show_tile(tile, ui, (row_index, column_index), self, interactive);
+                    show_tile(self, tile, ui, (row_index, column_index), interactive);
                 }
                 ui.end_row();
             }
@@ -132,32 +133,34 @@ pub fn show_main_screen() {
 }
 
 
-fn show_tile(tile: &Tile, ui: &mut Ui, coordinates: (usize, usize), state: &mut MainWindow, interactive: bool) {
+fn show_tile(main_window: &mut MainWindow, tile: &Tile, ui: &mut Ui, coordinates: (usize, usize), interactive: bool) {
     match tile {
-        Empty => add_empty(ui, coordinates, &mut state.game_state, state.chosen_tile, &mut state.winner, state.tile_size, interactive),
-        Blue => add_blue(ui, coordinates, &mut state.game_state, state.chosen_tile, &mut state.winner, state.tile_size, interactive),
-        Red => add_red(ui, coordinates, &mut state.game_state, state.chosen_tile, &mut state.winner, state.tile_size, interactive)
+        Empty => add_empty(main_window, ui, coordinates, interactive),
+        Blue => add_blue(main_window, ui, coordinates, interactive),
+        Red => add_red(main_window, ui, coordinates, interactive)
     }
 }
 
-fn add_empty(ui: &mut Ui, coordinates: (usize, usize), game_state: &mut GameState, chosen_tile: Tile, winner: &mut Option<Player>, tile_size: f32, interactive: bool) {
-    if ui.button(RichText::new("⬛").color(Color32::WHITE).size(tile_size).background_color(get_tile_color(game_state, winner))).clicked() && interactive {
-        let _ = game_state.play(coordinates, chosen_tile);
-        evaluate_game_state(game_state, winner);
-    }
+fn add_empty(main_window: &mut MainWindow,ui: &mut Ui, coordinates: (usize, usize), interactive: bool) {
+    add_button(main_window, ui, coordinates, interactive, "⬛".to_owned(), Color32::WHITE);
 }
 
-fn add_blue(ui: &mut Ui, coordinates: (usize, usize), game_state: &mut GameState, chosen_tile: Tile, winner: &mut Option<Player>, tile_size: f32, interactive: bool) {
-    if ui.button(RichText::new("🌑").color(Color32::BLUE).size(tile_size).background_color(get_tile_color(game_state, winner))).clicked() && interactive {
-        let _ = game_state.play(coordinates, chosen_tile);
-        evaluate_game_state(game_state, winner);
-    }
+fn add_blue(main_window: &mut MainWindow,ui: &mut Ui, coordinates: (usize, usize), interactive: bool) {
+    add_button(main_window, ui, coordinates, interactive, "🌑".to_owned(), Color32::BLUE);
 }
 
-fn add_red(ui: &mut Ui, coordinates: (usize, usize), game_state: &mut GameState, chosen_tile: Tile, winner: &mut Option<Player>, tile_size: f32, interactive: bool) {
-    if ui.button(RichText::new("❌").color(Color32::RED).size(tile_size).background_color(get_tile_color(game_state, winner))).clicked() && interactive {
-        let _ = game_state.play(coordinates, chosen_tile);
-        evaluate_game_state(game_state, winner);
+fn add_red(main_window: &mut MainWindow, ui: &mut Ui, coordinates: (usize, usize), interactive: bool) {
+    add_button(main_window, ui, coordinates, interactive, "❌".to_owned(), Color32::RED);
+}
+
+fn add_button(main_window: &mut MainWindow, ui: &mut Ui, coordinates: (usize, usize), interactive: bool, text: String, color: Color32){
+    if ui.add(Button::new(RichText::new(text).color(color).size(main_window.tile_size).background_color(get_tile_color(&main_window.game_state, &main_window.winner)))
+        .fill(get_tile_color(&main_window.game_state, &main_window.winner))
+        .min_size(Vec2 { x: main_window.tile_size, y: main_window.tile_size })
+        .rounding(Rounding::none()))
+    .clicked() && interactive{
+        let _ = main_window.game_state.play(coordinates, main_window.chosen_tile);
+        evaluate_game_state(&main_window.game_state, &mut main_window.winner);
     }
 }
 

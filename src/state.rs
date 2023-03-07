@@ -140,16 +140,12 @@ pub fn make_a_random_move(game_state: &mut GameState) {
 
 #[cfg(test)]
 mod state_test {
-    use crate::players::Player::Order;
     use crate::state::GameState;
-    use crate::tile::Tile::{Blue, Empty, Red};
+    use crate::tile::Tile::{Blue, Red};
 
     #[test]
     fn test_5_horizontal() {
-        let mut game_state: GameState = GameState::new(
-            [[Empty; 6]; 6],
-            Order,
-        );
+        let mut game_state: GameState = GameState::default_new();
         game_state.play((0, 1), Blue).expect("");
         game_state.play((0, 2), Blue).expect("");
         game_state.play((0, 3), Blue).expect("");
@@ -162,10 +158,7 @@ mod state_test {
 
     #[test]
     fn test_6_horizontal() {
-        let mut game_state: GameState = GameState::new(
-            [[Empty; 6]; 6],
-            Order,
-        );
+        let mut game_state: GameState = GameState::default_new();
         game_state.play((0, 0), Blue).expect("");
         game_state.play((0, 1), Blue).expect("");
         game_state.play((0, 2), Blue).expect("");
@@ -179,10 +172,7 @@ mod state_test {
 
     #[test]
     fn test_5_vertical() {
-        let mut game_state: GameState = GameState::new(
-            [[Empty; 6]; 6],
-            Order,
-        );
+        let mut game_state: GameState = GameState::default_new();
         game_state.play((1, 1), Blue).expect("");
         game_state.play((2, 1), Blue).expect("");
         game_state.play((3, 1), Blue).expect("");
@@ -195,10 +185,7 @@ mod state_test {
 
     #[test]
     fn test_6_vertical() {
-        let mut game_state: GameState = GameState::new(
-            [[Empty; 6]; 6],
-            Order,
-        );
+        let mut game_state: GameState = GameState::default_new();
         game_state.play((0, 1), Red).expect("");
         game_state.play((1, 1), Red).expect("");
         game_state.play((2, 1), Red).expect("");
@@ -212,10 +199,7 @@ mod state_test {
 
     #[test]
     fn test_5_down_diagonal() {
-        let mut game_state: GameState = GameState::new(
-            [[Empty; 6]; 6],
-            Order,
-        );
+        let mut game_state: GameState = GameState::default_new();
         game_state.play((1, 1), Blue).expect("");
         game_state.play((2, 2), Blue).expect("");
         game_state.play((3, 3), Blue).expect("");
@@ -228,10 +212,7 @@ mod state_test {
 
     #[test]
     fn test_6_down_diagonal() {
-        let mut game_state: GameState = GameState::new(
-            [[Empty; 6]; 6],
-            Order,
-        );
+        let mut game_state: GameState = GameState::default_new();
         game_state.play((0, 0), Blue).expect("");
         game_state.play((1, 1), Blue).expect("");
         game_state.play((2, 2), Blue).expect("");
@@ -245,10 +226,7 @@ mod state_test {
 
     #[test]
     fn test_5_up_diagonal() {
-        let mut game_state: GameState = GameState::new(
-            [[Empty; 6]; 6],
-            Order,
-        );
+        let mut game_state: GameState = GameState::default_new();
         game_state.play((1, 4), Red).expect("");
         game_state.play((2, 3), Red).expect("");
         game_state.play((3, 2), Red).expect("");
@@ -261,10 +239,7 @@ mod state_test {
 
     #[test]
     fn test_6_up_diagonal() {
-        let mut game_state: GameState = GameState::new(
-            [[Empty; 6]; 6],
-            Order,
-        );
+        let mut game_state: GameState = GameState::default_new();
         game_state.play((0, 5), Red).expect("");
         game_state.play((1, 4), Red).expect("");
         game_state.play((2, 3), Red).expect("");
@@ -278,10 +253,7 @@ mod state_test {
 
     #[test]
     fn test_5_horizontal_6_vertical() {
-        let mut game_state: GameState = GameState::new(
-            [[Empty; 6]; 6],
-            Order,
-        );
+        let mut game_state: GameState = GameState::default_new();
         game_state.play((0, 1), Blue).expect("");
         game_state.play((0, 2), Blue).expect("");
         game_state.play((0, 3), Blue).expect("");
@@ -299,10 +271,7 @@ mod state_test {
 
     #[test]
     fn test_6_horizontal_5_vertical() {
-        let mut game_state: GameState = GameState::new(
-            [[Empty; 6]; 6],
-            Order,
-        );
+        let mut game_state: GameState = GameState::default_new();
         game_state.play((0, 0), Red).expect("");
         game_state.play((0, 1), Red).expect("");
         game_state.play((0, 2), Red).expect("");
